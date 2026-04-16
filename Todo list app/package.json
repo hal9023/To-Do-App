@@ -4,7 +4,7 @@
   "description": "Personal To-Do list app",
   "license": "MIT",
   "author": "Hal5150",
-  "main": "main.js",
+  "main": "src/main.js",
   "scripts": {
     "start": "electron .",
     "test": "\"echo \\\"Error: no test specified\\\" && exit 1\""
