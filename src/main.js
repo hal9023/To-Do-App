@@ -18,15 +18,27 @@ const createWindow = () => {
 
 ipcMain.handle('dialog:open-task-file', async () => {
     const { canceled, filePaths } = await dialog.showOpenDialog({
-        properties: ['openFile'],
+        properties: ['openFile', 'multiSelections'],
         filters: [{ name: 'JSON', extensions: ['json'] }]
     })
     if (canceled || filePaths.length === 0) return null
 
-    const content = await fs.promises.readFile(filePaths[0], 'utf8')
-    const name = path.basename(filePaths[0])
-    return { name, content }
+    const files = await Promise.all(filePaths.map(async (filePath, i) => {
+        const content = await fs.promises.readFile(filePath, 'utf8')
+        const name = path.basename(filePath)
+        return { path: filePath, name, content }
+    }))
+    return files
 })
+
+ipcMain.handle('read-file', async (event, filePath) => {
+    return await fs.promises.readFile(filePath, 'utf8');
+});
+
+ipcMain.handle('update-quick-selector-file', async (event, filePath, data) => {
+    await fs.promises.writeFile(filePath, data, 'utf8');
+    return true;
+});
 
 ipcMain.handle('dialog:save-task-file', async (event, content) => {
     const { canceled, filePath } = await dialog.showSaveDialog({

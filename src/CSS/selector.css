@@ -20,3 +20,26 @@
     display: table;
     clear: both;
 }
+
+.selectorButton.active {
+    background-color: lightblue;
+}
+
+.quick-selector-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 6px;
+}
+
+.selectorButton-delete {
+    margin-left: 8px;
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    padding: 4px 8px;
+    cursor: pointer;
+}
+
+.selectorButton-delete:hover {
+    background-color: #c0392b;
+}

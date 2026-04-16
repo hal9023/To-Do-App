@@ -24,7 +24,8 @@ function createNewTask() {
     });
 
     Object.assign(deleteButton, {
-        innerText: "Delete"
+        innerText: "Delete",
+        className: "deleteButton"
     });
     deleteButton.addEventListener("click", () => {
         const index = Number(checkButton.dataset.index);
@@ -92,7 +93,8 @@ function displayTaskList(list) {
             checked: task.completed
         });
         Object.assign(deleteButton, {
-            innerText: "Delete"
+            innerText: "Delete",
+            className: "deleteButton"
         });
 
         checkButton.dataset.index = index;
@@ -161,8 +163,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const exportBTN = document.getElementById("exportTDL");
 
     importBTN.addEventListener("click", async () => {
-        const fileContents = await window.electronAPI.openTaskFile();
-        if (!fileContents) return;
+        const fileDatas = await window.electronAPI.openTaskFile();
+        if (!fileDatas || !Array.isArray(fileDatas) || fileDatas.length === 0) return;
+
+        const { content: fileContents } = fileDatas[0];
 
         try {
             taskList = JSON.parse(fileContents);
