@@ -6,7 +6,7 @@
             http-equiv="Content-Security-Policy"
             content="default-src 'self'; script-src 'self'"
         />
-        <script src="src/app.js"></script>
+        <script src="src/todo.js"></script>
         <title>Electron Test Renderer!</title>
     </head>
     <body>
@@ -23,9 +23,9 @@
             <input type="button" id="clearTDL" value="Clear To-Do List"/><br>
 
             <label for="taskName">Task Title:</label>
-            <input type="text" id="taskName" name="Task Name Input Box" placeholder="Task Name Input Box"/>
-            
-            <input type="button" id="newBtn" value="Create New"/>
+            <input type="text" id="taskName" name="Task Name Input Box" placeholder="Press Enter to Create Task"/>
+            <!-- Deprecated create new btton, would rather use enter key-->
+            <!-- <input type="button" id="newBtn" value="Create New"/> -->
         </div>
     </body>
 </html>

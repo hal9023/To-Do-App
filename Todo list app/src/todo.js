@@ -7,6 +7,8 @@ function createNewTask() {
     newTask.className = "task-item";
     const checkButton = document.createElement("input");
     const taskLabel = document.createElement("label");
+    const deleteButton = document.createElement("button");
+
     Object.assign(taskLabel, {
         for: "taskName",
         innerText: document.getElementById("taskName").value
@@ -21,6 +23,13 @@ function createNewTask() {
         value: "Done!"
     });
 
+    Object.assign(deleteButton, {
+        innerText: "Delete"
+    });
+    deleteButton.addEventListener("click", () => {
+        const index = Number(checkButton.dataset.index);
+        deleteTask(index);
+    });
     const taskName = taskLabel.innerText;
     const task = { name: taskName, completed: false };
     const taskIndex = taskList.push(task) - 1;
@@ -29,9 +38,27 @@ function createNewTask() {
 
     newTask.append(checkButton);
     newTask.append(taskLabel);
+    newTask.append(deleteButton);
     document.body.appendChild(newTask);
 
     console.log("New Task Created!");
+}
+function deleteTask(index) {
+    const taskElements = document.querySelectorAll('.task-item');
+    if (index >= 0 && index < taskElements.length) {
+        taskElements[index].remove();
+        taskList.splice(index, 1);
+        console.log(`Deleted task at index ${index}.`);
+    } else {
+        console.error(`Invalid index ${index}. No task deleted.`);
+    }
+    // Need to make it realign the index after deleting a task, otherwise the checkboxes will stop working after deleting a task that isn't the last one in the list
+    taskElements.forEach((element, idx) => {
+        const checkbox = element.querySelector('input[type="checkbox"]');
+        if (checkbox) {
+            checkbox.dataset.index = idx;
+        }
+    });
 }
 function printTaskList() {
     console.log("Current Task List:");
@@ -39,15 +66,22 @@ function printTaskList() {
         console.log(`${index + 1}. ${task.name} - ${task.completed ? "Completed" : "Not Completed"}`);
     });
 }
+function clearTaskElements() {
+    const taskElements = document.querySelectorAll('.task-item');
+    taskElements.forEach((element) => element.remove());
+}
+
 function displayTaskList(list) {
-    // A function to display tasklists
-    deleteCurrentTasks();
+    clearTaskElements();
+    taskList = list.slice();
 
     list.forEach((task, index) => {
         const newTask = document.createElement("div");
         newTask.className = "task-item";
         const checkButton = document.createElement("input");
         const taskLabel = document.createElement("label");
+        const deleteButton = document.createElement("button");
+
         Object.assign(taskLabel, {
             for: "taskName",
             innerText: task.name
@@ -57,8 +91,18 @@ function displayTaskList(list) {
             value: "Done!",
             checked: task.completed
         });
+        Object.assign(deleteButton, {
+            innerText: "Delete"
+        });
+
+        checkButton.dataset.index = index;
+        deleteButton.addEventListener("click", () => {
+            deleteTask(index);
+        });
+
         newTask.append(checkButton);
         newTask.append(taskLabel);
+        newTask.append(deleteButton);
         document.body.appendChild(newTask);
     });
 }
@@ -95,12 +139,16 @@ document.addEventListener("change", (event) => {
 
 // Event listeners for creating new tasks, and for importing/exporting the task list
 
+// Event listener for create button, which I have deprecated in favor of enter key
+/*
 document.addEventListener("DOMContentLoaded", () => {
     const newBtn = document.getElementById("newBtn");
     newBtn.addEventListener("click", createNewTask);
     const taskInput = document.getElementById("taskName"); // This doesn't work and idk why
     taskInput.value = ""; // This doesn't work and idk why
 });
+*/ 
+
 document.addEventListener("keypress", (event) => {
     if (event.key === "Enter") {
         createNewTask();
