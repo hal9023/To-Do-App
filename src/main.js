@@ -23,7 +23,9 @@ ipcMain.handle('dialog:open-task-file', async () => {
     })
     if (canceled || filePaths.length === 0) return null
 
-    return fs.promises.readFile(filePaths[0], 'utf8')
+    const content = await fs.promises.readFile(filePaths[0], 'utf8')
+    const name = path.basename(filePaths[0])
+    return { name, content }
 })
 
 ipcMain.handle('dialog:save-task-file', async (event, content) => {

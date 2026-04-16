@@ -39,7 +39,7 @@ function createNewTask() {
     newTask.append(checkButton);
     newTask.append(taskLabel);
     newTask.append(deleteButton);
-    document.body.appendChild(newTask);
+    document.getElementById('taskListContainer').appendChild(newTask);
 
     console.log("New Task Created!");
 }
@@ -103,7 +103,7 @@ function displayTaskList(list) {
         newTask.append(checkButton);
         newTask.append(taskLabel);
         newTask.append(deleteButton);
-        document.body.appendChild(newTask);
+        document.getElementById('taskListContainer').appendChild(newTask);
     });
 }
 function deleteCurrentTasks() {

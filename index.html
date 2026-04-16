@@ -7,25 +7,41 @@
             content="default-src 'self'; script-src 'self'"
         />
         <script src="src/todo.js"></script>
-        <title>Electron Test Renderer!</title>
+        <script src="src/selector.js"></script>
+        <link rel="stylesheet" href="src/CSS/selector.css">
+        <title>To-Do List App</title>
     </head>
     <body>
-        <div class="header"><h1>To-Do List</h1></div>
-        <div class="bodyCheckBox">
+        <div class="row">
+            <div class="column left">
+                <div class="header"><h1>To-Do List</h1></div>
+                <div class="bodyCheckBox">
 
-            <label for="importTDL">Import To-Do List:</label>
-            <input type="button" id="importTDL" value="Import To-Do List"/><br>
-            
-            <label for="exportTDL">Export To-Do List:</label>
-            <input type="button" id="exportTDL" value="Export To-Do List"/><br>
+                    <label for="importTDL">Import To-Do List:</label>
+                    <input type="button" id="importTDL" value="Import To-Do List"/><br>
+                    
+                    <label for="exportTDL">Export To-Do List:</label>
+                    <input type="button" id="exportTDL" value="Export To-Do List"/><br>
 
-            <label for="clearTDL">Clear To-Do List:</label>
-            <input type="button" id="clearTDL" value="Clear To-Do List"/><br>
+                    <label for="clearTDL">Clear To-Do List:</label>
+                    <input type="button" id="clearTDL" value="Clear To-Do List"/><br>
 
-            <label for="taskName">Task Title:</label>
-            <input type="text" id="taskName" name="Task Name Input Box" placeholder="Press Enter to Create Task"/>
-            <!-- Deprecated create new btton, would rather use enter key-->
-            <!-- <input type="button" id="newBtn" value="Create New"/> -->
+                    <label for="taskName">Task Title:</label>
+                    <input type="text" id="taskName" name="Task Name Input Box" placeholder="Press Enter to Create Task"/>
+                    <!-- Deprecated create new btton, would rather use enter key-->
+                    <!-- <input type="button" id="newBtn" value="Create New"/> -->
+                </div>
+                <div id="taskListContainer"></div>
+            </div>
+            <div class="column right">
+                <div class=""header"><h1>Quick Selector</h1></div>
+                <div class="selectorButton">
+                    <input type="button" id="importToDoList" value="Add to Quick Selector"/><br>
+                    <input type="button" id="importQuickSelect" value="Import Quick Selector"/><br>
+                    <input type="button" id="exportQuickSelect" value="Export Quick Selector"/><br><br>
+                    <input type="button" id="clearSelector" value="Clear Quick Selector"/><br><br>
+                </div>
+            </div>
         </div>
     </body>
 </html>
