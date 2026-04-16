@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <meta
+            http-equiv="Content-Security-Policy"
+            content="default-src 'self'; script-src 'self'"
+        />
+        <script src="src/app.js"></script>
+        <title>Electron Test Renderer!</title>
+    </head>
+    <body>
+        <div class="header"><h1>To-Do List</h1></div>
+        <div class="bodyCheckBox">
+
+            <label for="importTDL">Import To-Do List:</label>
+            <input type="button" id="importTDL" value="Import To-Do List"/><br>
+            
+            <label for="exportTDL">Export To-Do List:</label>
+            <input type="button" id="exportTDL" value="Export To-Do List"/><br>
+
+            <label for="taskName">Task Title:</label>
+            <input type="text" id="taskName" name="Task Name Input Box" placeholder="Task Name Input Box"/>
+            
+            <input type="button" id="newBtn" value="Create New"/>
+        </div>
+    </body>
+</html>
