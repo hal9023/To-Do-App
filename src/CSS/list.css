@@ -1,7 +1,7 @@
 .task-item {
     display: flex;
     align-items: center;
-    margin: 5px 0;
+    margin: 3px 0;
 }
 
 .task-item input[type="checkbox"] {
@@ -9,9 +9,9 @@
 }
 
 .task-item label {
-    flex: 1;
+    flex: 50%;
 }
 
 .task-item button {
-    margin-left: 10px;
+    margin-left: 5px;
 }

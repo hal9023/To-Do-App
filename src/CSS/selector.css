@@ -21,6 +21,12 @@
     clear: both;
 }
 
+#taskListContainer label[selected] {
+    background-color: lightblue;
+    padding: 2px 4px;
+    border-radius: 2px;
+}
+
 .selectorButton.active {
     background-color: lightblue;
 }

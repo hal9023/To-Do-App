@@ -2,6 +2,28 @@ console.log("Todo List App Initialized!");
 
 let taskList = [];
 
+function toggleTaskSelection(taskLabel, event) {
+    const labels = document.querySelectorAll('#taskListContainer label');
+    const isSelected = taskLabel.hasAttribute('selected');
+
+    if (event.ctrlKey) {
+        if (isSelected) {
+            taskLabel.removeAttribute('selected');
+        } else {
+            taskLabel.setAttribute('selected', '');
+        }
+        return;
+    }
+
+    if (isSelected) {
+        taskLabel.removeAttribute('selected');
+        return;
+    }
+
+    labels.forEach(label => label.removeAttribute('selected'));
+    taskLabel.setAttribute('selected', '');
+}
+
 function createNewTask() {
     const newTask = document.createElement("div");
     newTask.className = "task-item";
@@ -17,6 +39,11 @@ function createNewTask() {
     if (document.getElementById("taskName").value === "") {
         taskLabel.innerText = "New Task";
     }
+
+    taskLabel.addEventListener("click", (event) => {
+        toggleTaskSelection(taskLabel, event);
+        console.log(`Selected task: ${taskLabel.innerText}`);
+    });
 
     Object.assign(checkButton, {
         type: "checkbox",
@@ -34,6 +61,7 @@ function createNewTask() {
     const taskName = taskLabel.innerText;
     const task = { name: taskName, completed: false };
     const taskIndex = taskList.push(task) - 1;
+
 
     checkButton.dataset.index = taskIndex;
 
@@ -87,6 +115,10 @@ function displayTaskList(list) {
             for: "taskName",
             innerText: task.name
         });
+        taskLabel.addEventListener("click", (event) => {
+            toggleTaskSelection(taskLabel, event);
+            console.log(`Selected task: ${taskLabel.innerText}`);
+        });
         Object.assign(checkButton, {
             type: "checkbox",
             value: "Done!",
@@ -128,6 +160,7 @@ function exportTaskList() {
             console.error("Error writing task list to file:", error);
         });
 }
+
 document.addEventListener("change", (event) => {
     const target = event.target;
     if (target.matches("input[type=checkbox]") && target.dataset.index !== undefined) {
@@ -190,4 +223,29 @@ document.addEventListener("DOMContentLoaded", () => {
         deleteCurrentTasks();
         console.log("Task list cleared.");
     });
+});
+
+document.addEventListener("keydown", (event) => {
+    const labels = document.querySelectorAll('#taskListContainer label');
+
+    if (event.key === "Tab") {
+        // Indent all selected tasks
+        labels.forEach(label => {
+            if (label.hasAttribute('selected')) {
+                console.log('indenting task');
+                label.style.paddingLeft = (parseInt(label.style.paddingLeft) || 0) + 20 + 'px';
+            }
+        });
+    }
+    // I wanna make it also indent the matching checkbox
+    else if (event.key === "Backspace") {
+        // Dedent all selected tasks
+        labels.forEach(label => {
+            // For some reason they keypress is registered, but the task does not get dedented. 
+            if (label.hasAttribute('selected')) {
+                console.log('dedenting task');
+                label.style.paddingLeft = Math.max(0, parseInt(label.style.paddingLeft) || 0 - 20) + 'px';
+            }
+        });
+    }
 });
