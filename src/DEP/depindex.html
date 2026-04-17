@@ -6,8 +6,10 @@
             http-equiv="Content-Security-Policy"
             content="default-src 'self'; script-src 'self'"
         />
-        <link rel="stylesheet" href="src/CSS/columns.css">
-        <script src="src/compiledJS/todo.js"></script>
+        <script src="src/todo.js"></script>
+        <script src="src/selector.js"></script>
+        <link rel="stylesheet" href="src/CSS/selector.css">
+        <link rel="stylesheet" href="src/CSS/list.css">
         <title>To-Do List App</title>
     </head>
     <body>
@@ -15,9 +17,6 @@
             <div class="column left">
                 <div class="header"><h1>To-Do List</h1></div>
                 <div class="bodyCheckBox">
-
-                    <label for="testButton">Test Button:</label>
-                    <input type="button" id="testButton" value="Test Button"/><br>
 
                     <label for="importTDL">Import To-Do List:</label>
                     <input type="button" id="importTDL" value="Import To-Do List"/><br>
@@ -33,7 +32,7 @@
                     <!-- Deprecated create new btton, would rather use enter key-->
                     <!-- <input type="button" id="newBtn" value="Create New"/> -->
                 </div>
-                <div id="taskContainer"></div>
+                <div id="taskListContainer"></div>
             </div>
             <div class="column right">
                 <div class=""header"><h1>Quick Selector</h1></div>
