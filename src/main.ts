@@ -1,7 +1,6 @@
-import { app, BrowserWindow, ipcMain, dialog } from 'electron';
-
-const path = import('path');
-const fs = import('fs');
+const {app, BrowserWindow, ipcMain, dialog, ipcMainInvokeEvent} = require('electron');
+const path = require('path');
+const fs = require('fs');
 
 
 const createWindow = () => {
@@ -9,7 +8,7 @@ const createWindow = () => {
         width: 800,
         height: 600,
         webPreferences: {
-            //preload: path.join(__dirname, 'preload.js'),
+            preload: path.join(__dirname, 'preload.js'),
             contextIsolation: true,
             nodeIntegration: false
         }
@@ -20,6 +19,18 @@ const createWindow = () => {
 
     win.webContents.openDevTools(); // Opens the console on launch for debugging
 }
+
+ipcMain.handle('dialog:save-task-file', async (event: any, content: string) => {
+   const { canceled, filePath } = await dialog.showSaveDialog({
+        title: 'Save To-Do List',
+        defaultPath: 'todolist.json',
+        filters: [{ name: 'JSON Files', extensions: ['json']}]
+        });
+    if (canceled || !filePath) return null;
+
+    await fs.promises.writeFile(filePath, content, 'utf-8');
+    return filePath;
+});
 
 app.whenReady().then(() => {
   createWindow()

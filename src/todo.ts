@@ -81,7 +81,18 @@ class task {
 const allTasks: task[] = []; // Array to hold all tasks.
 
 function exportTDL (masterList: task[]) {
-    
+    // Iterate over allTasks, stringify each task, and write to a JSON file
+    const jsonData = JSON.stringify(masterList.map(task => task.toJSON()), null, 2);
+    console.log(jsonData);
+
+    // Log to file
+    window.electronAPI.saveTaskFile(jsonData)
+        .then((savedPath: void) => {
+            console.log("File saved successfully.");
+        })
+        .catch((error: any) => {
+                console.error("Error saving file:", error);
+        })
 }
 
 document.addEventListener("keydown", (event) => {
@@ -97,6 +108,13 @@ document.addEventListener("keydown", (event) => {
 
         console.log("Current Tasks:", allTasks);
     }
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+    const exportButton = document.getElementById("exportTDL") as HTMLButtonElement;
+    exportButton.addEventListener("click", () => {
+        exportTDL(allTasks);
+    });
 });
 /*
 Demonstration Button to test class functionality, will be removed once basic functionality

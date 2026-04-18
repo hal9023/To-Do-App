@@ -1,16 +1,15 @@
 {
   "name": "hal-todo-list",
   "version": "1.0.0",
-  "type": "module",
   "description": "Personal To-Do list app",
   "license": "MIT",
   "author": "Hal5150",
-  "main": "src/main.ts",
+  "main": "src/compiledJS/main.js",
   "scripts": {
-    "start": "electron .",
-    "test": "\"echo \\\"Error: no test specified\\\" && exit 1\""
+    "start": "electron ."
   },
   "devDependencies": {
+    "@types/node": "^25.6.0",
     "electron": "^41.2.1"
   },
   "dependencies": {
