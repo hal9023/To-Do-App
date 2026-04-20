@@ -11,6 +11,7 @@
 * Rewrite in Type Script?
 * Task Descriptions
 * Date selection system for adding task "complete by dates" with built in calendar day selector
+* Draggable tasks
 
 ## Current Bugs:
 

@@ -1,3 +1,16 @@
+interface ImportedFile {
+    content: string;
+    filePath: string; 
+}
+interface ImportedTask {
+    uID: number;
+    title: string;
+    description: string;
+    done: boolean;
+    indents: number;
+    selected: boolean;
+}
+
 class task {
     // Basic attributes of the task
     uID: number; // Unique identifier for the task, can be used for selection and other operations
@@ -80,7 +93,7 @@ class task {
 
 const allTasks: task[] = []; // Array to hold all tasks.
 
-function exportTDL (masterList: task[]) {
+function exportTDL(masterList: task[]) {
     // Iterate over allTasks, stringify each task, and write to a JSON file
     const jsonData = JSON.stringify(masterList.map(task => task.toJSON()), null, 2);
     console.log(jsonData);
@@ -91,8 +104,57 @@ function exportTDL (masterList: task[]) {
             console.log("File saved successfully.");
         })
         .catch((error: any) => {
-                console.error("Error saving file:", error);
+            console.error("Error saving file:", error);
         })
+}
+
+async function importTDL() {
+    // Grab file contents => parse JSON into task objects => update master list of Tasks to include those tasks objects
+    // Display master list of tasks as to-do list 
+
+    const file = await window.electronAPI.openTaskFile(); 
+
+    if (!file) {
+        console.log("No file data selected");
+        return;
+    }
+
+    file.forEach((files: ImportedFile) => {
+        const importedTasks = JSON.parse(files.content) as ImportedTask[];
+        
+        // Check JSON integrity
+        importedTasks.forEach((taskData) => {
+            if (!('uID' in taskData)) {
+                console.log ("Task is missing uID!");
+            }
+            else if (!('title' in taskData)) {
+                console.log ("Task is missing Title!");
+            }
+            else if (!('description' in taskData)) {
+                console.log ("Task is missing Description!");
+            }
+            else if (!('done' in taskData)) {
+                console.log ("Task is missing Done!");
+            }
+            else if (!('indents' in taskData)) {
+                console.log ("Task is missing Indents!");
+            }
+            else if (!('selected' in taskData)) {
+                console.log ("Task is missing Selected!");
+            }
+        });
+        // Process JSON if integrity is good
+        importedTasks.forEach((taskData) => {
+            const importedTask = new task (
+                taskData.title,
+                taskData.description,
+                taskData.done,
+                taskData.indents
+            );
+            allTasks.push(importedTask);
+            importedTask.createTaskElement();
+        });
+    }) 
 }
 
 document.addEventListener("keydown", (event) => {
@@ -112,9 +174,15 @@ document.addEventListener("keydown", (event) => {
 
 document.addEventListener("DOMContentLoaded", () => {
     const exportButton = document.getElementById("exportTDL") as HTMLButtonElement;
+    const importButton = document.getElementById("importTDL") as HTMLButtonElement;
+
     exportButton.addEventListener("click", () => {
         exportTDL(allTasks);
     });
+
+    importButton.addEventListener("click", () => {
+        importTDL();
+    })
 });
 /*
 Demonstration Button to test class functionality, will be removed once basic functionality
