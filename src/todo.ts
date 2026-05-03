@@ -19,6 +19,7 @@ class task {
     done: boolean;
     indents: number;
     selected: boolean = false;
+    deleted: boolean = false;
     
     // Constructor method for class task
     constructor(title: string, description: string, done: boolean, indents: number) {
@@ -84,14 +85,16 @@ class task {
     }
     deleteTask() {
         document.getElementById(`task-${this.uID}`)?.remove();
-
+        this.deleted = true; 
     }
     applyIndentation(HTMLDivElement: HTMLDivElement) {
         HTMLDivElement.style.marginLeft = `${this.indents * 20}px`;
     }
 }
 
-const allTasks: task[] = []; // Array to hold all tasks.
+let allTasks: task[] = []; // Array to hold all tasks.
+
+// Turns out the import function works fine, its this one thats cooked :sob:
 
 function exportTDL(masterList: task[]) {
     // Iterate over allTasks, stringify each task, and write to a JSON file
@@ -156,7 +159,24 @@ async function importTDL() {
         });
     }) 
 }
+function updateMasterList (oldMaster: task[]) {
+    const newList: task[]  = [];
 
+    oldMaster.forEach((task) => {
+        if (!task.deleted) {
+            newList.push(task);
+        }
+    }); 
+
+    return newList;
+}
+function clearTDL (masterList: task[]) {
+    // Clears Current To-Do List
+    masterList.forEach((task) => {
+        task.deleteTask();
+    });
+}
+// Event Listener to check for pressed buttons on screen
 document.addEventListener("keydown", (event) => {
     if (event.key === "Enter") {
         const titleInput = document.getElementById("taskName") as HTMLInputElement;
@@ -175,14 +195,22 @@ document.addEventListener("keydown", (event) => {
 document.addEventListener("DOMContentLoaded", () => {
     const exportButton = document.getElementById("exportTDL") as HTMLButtonElement;
     const importButton = document.getElementById("importTDL") as HTMLButtonElement;
+    const clearButton = document.getElementById("clearTDL") as HTMLButtonElement;
 
     exportButton.addEventListener("click", () => {
+        allTasks = updateMasterList(allTasks); 
         exportTDL(allTasks);
     });
 
-    importButton.addEventListener("click", () => {
+    importButton.addEventListener("click", () => { 
+        allTasks = updateMasterList(allTasks); 
         importTDL();
-    })
+    });
+
+    clearButton.addEventListener("click", () => {
+        allTasks = updateMasterList(allTasks); 
+        clearTDL(allTasks);
+    });
 });
 /*
 Demonstration Button to test class functionality, will be removed once basic functionality
@@ -202,3 +230,5 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 });
 */
+
+
