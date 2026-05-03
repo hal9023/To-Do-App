@@ -94,8 +94,7 @@ class task {
 
 let allTasks: task[] = []; // Array to hold all tasks.
 
-// Turns out the import function works fine, its this one thats cooked :sob:
-
+//Exports to do list to file
 function exportTDL(masterList: task[]) {
     // Iterate over allTasks, stringify each task, and write to a JSON file
     const jsonData = JSON.stringify(masterList.map(task => task.toJSON()), null, 2);
