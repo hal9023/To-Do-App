@@ -1,4 +1,7 @@
-# Presently, most of the things that I've implemented work, but I'm not fond of the code base I'm probably going to go ahead with rewriting everything since everything I add feels like it just makes the mess worse
+# Currently working on a full type sciprt rewrite!
+# So far, creating tasks, deleting tasks, naming, completing, import, export, clearing all work
+# Moving on to re-implementing task-list-lists and the quick selector option
+
 
 ## To be added:
 
