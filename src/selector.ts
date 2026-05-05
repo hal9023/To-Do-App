@@ -2,7 +2,14 @@ interface ImportedFile {
     content: string;
     filePath: string;
 }
-
+interface ImportedTask {
+    uID: number;
+    title: string;
+    description: string;
+    done: boolean;
+    indents: number;
+    selected: boolean;
+}
     // What aspects does quick selector need?
     // -- A set of task lists
     // -- The Filepaths for these task lists
@@ -22,7 +29,6 @@ class taskList {
         this.filePath = filePath;
 
         console.log ('Task List Identified: ${this.title}, File Path: ${this.filePath}, Selected: ${this.selected}');
-
         
     }
    toJSON() {
@@ -50,11 +56,56 @@ class taskList {
 
         listDiv.appendChild(button);
 
-        document.getElementById("selectorContainer")?.appendChild(listDiv);
+        document.getElementById("quick-selector-container")?.appendChild(listDiv);
+
+        return listDiv;
     }   
     renderList() {
         // Will be written to load in task list
         // Can probably just reuse existing function for this
+        
+        const file = this.filePath;
+
+        if (!file) {
+            console.log("No file data detected");
+            return;
+        }
+        file.forEach((files: ImportedFile) => {
+            const importedTasks = JSON.parse(files.content) as ImportedTask[];
+
+            //Check Json Integrity
+            importedTasks.forEach((taskData) => {
+                if(!('uID' in taskData)) {
+                    console.log ("Task is missing uID!");
+                }
+                else if (!('title' in taskData)) {
+                    console.log ("Task is missing Title!");
+                }
+                else if (!('description' in taskData)) {
+                    console.log ("Task is missing Description!");
+                }
+                else if (!('done' in taskData)) {
+                    console.log ("Task is missing Done!");
+                }
+                else if (!('indents' in taskData)) {
+                    console.log ("Task is missing Indents!");
+                }
+                else if (!('selected' in taskData)) {
+                    console.log ("Task is missing Selected!");
+                }
+            });
+            // Process Json
+            importedTasks.forEach((taskData) => {
+                const importedTask = new task {
+                    taskData.title,
+                    taskData.description,
+                    taskData.done,
+                    taskData.indents
+                );
+                allTasks.push(importedTask);
+                importedTask.createTaskElement();
+            });
+        });
     }
 }    
 

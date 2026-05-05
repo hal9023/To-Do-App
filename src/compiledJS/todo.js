@@ -58,7 +58,7 @@ class task {
         taskDiv.appendChild(checkButton);
         taskDiv.appendChild(taskLabel);
         taskDiv.appendChild(deleteButton);
-        document.getElementById("taskContainer")?.appendChild(taskDiv);
+        document.getElementById("task-container")?.appendChild(taskDiv);
         return taskDiv;
     }
     deleteTask() {
