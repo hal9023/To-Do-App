@@ -2,19 +2,19 @@
 class taskList {
     uID;
     title;
-    filePath;
+    file;
     selected = false;
-    constructor(title, filePath) {
+    constructor(title, file) {
         this.uID = Date.now();
         this.title = title;
-        this.filePath = filePath;
+        this.file = file;
         console.log('Task List Identified: ${this.title}, File Path: ${this.filePath}, Selected: ${this.selected}');
     }
     toJSON() {
         return {
             uID: this.uID,
             title: this.title,
-            filePath: this.filePath,
+            file: this.file,
         };
     }
     createListElement() {
@@ -34,40 +34,37 @@ class taskList {
         return listDiv;
     }
     renderList() {
-        const file = this.filePath;
+        const file = this.file;
         if (!file) {
             console.log("No file data detected");
             return;
         }
-        file.forEach((files) => {
-            const importedTasks = JSON.parse(files.content);
-            importedTasks.forEach((taskData) => {
-                if (!('uID' in taskData)) {
-                    console.log("Task is missing uID!");
-                }
-                else if (!('title' in taskData)) {
-                    console.log("Task is missing Title!");
-                }
-                else if (!('description' in taskData)) {
-                    console.log("Task is missing Description!");
-                }
-                else if (!('done' in taskData)) {
-                    console.log("Task is missing Done!");
-                }
-                else if (!('indents' in taskData)) {
-                    console.log("Task is missing Indents!");
-                }
-                else if (!('selected' in taskData)) {
-                    console.log("Task is missing Selected!");
-                }
-            });
-            importedTasks.forEach((taskData) => {
-                const importedTask = new task, { taskData, title, taskData, description, taskData, done, taskData, indents };
-            });
+        const importedTasks = JSON.parse(file.content);
+        importedTasks.forEach((taskData) => {
+            if (!('uID' in taskData)) {
+                console.log("Task is missing uID!");
+            }
+            else if (!('title' in taskData)) {
+                console.log("Task is missing Title!");
+            }
+            else if (!('description' in taskData)) {
+                console.log("Task is missing Description!");
+            }
+            else if (!('done' in taskData)) {
+                console.log("Task is missing Done!");
+            }
+            else if (!('indents' in taskData)) {
+                console.log("Task is missing Indents!");
+            }
+            else if (!('selected' in taskData)) {
+                console.log("Task is missing Selected!");
+            }
+        });
+        importedTasks.forEach((taskData) => {
+            const importedTask = new task(taskData.title, taskData.description, taskData.done, taskData.indents);
             allTasks.push(importedTask);
             importedTask.createTaskElement();
         });
     }
-    ;
 }
 //# sourceMappingURL=selector.js.map

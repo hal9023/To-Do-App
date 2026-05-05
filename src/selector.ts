@@ -20,13 +20,13 @@ interface ImportedTask {
 class taskList {
     uID: number;
     title: string;
-    filePath: string;
+    file: ImportedFile;
     selected: boolean = false;
     
-    constructor(title: string, filePath: string) {
+    constructor(title: string, file: ImportedFile) {
         this.uID = Date.now();
         this.title = title;
-        this.filePath = filePath;
+        this.file = file;
 
         console.log ('Task List Identified: ${this.title}, File Path: ${this.filePath}, Selected: ${this.selected}');
         
@@ -35,7 +35,7 @@ class taskList {
         return {
             uID: this.uID,
             title: this.title,
-            filePath: this.filePath,
+            file: this.file,
         }
     }
     
@@ -64,14 +64,13 @@ class taskList {
         // Will be written to load in task list
         // Can probably just reuse existing function for this
         
-        const file = this.filePath;
+        const file = this.file;
 
         if (!file) {
             console.log("No file data detected");
             return;
         }
-        file.forEach((files: ImportedFile) => {
-            const importedTasks = JSON.parse(files.content) as ImportedTask[];
+        const importedTasks = JSON.parse(file.content) as ImportedTask[];
 
             //Check Json Integrity
             importedTasks.forEach((taskData) => {
@@ -96,7 +95,7 @@ class taskList {
             });
             // Process Json
             importedTasks.forEach((taskData) => {
-                const importedTask = new task {
+                const importedTask = new task (
                     taskData.title,
                     taskData.description,
                     taskData.done,
@@ -105,7 +104,14 @@ class taskList {
                 allTasks.push(importedTask);
                 importedTask.createTaskElement();
             });
-        });
     }
 }    
 
+document.addEventLiustener("DOMContentLoaded", () => {
+    const addButton = document.getElementById("importQuickSelect") as HTMLButtonElement;
+    addButton.addEventListener("click", () => {
+        const importList = new taskList().   
+        // Add File Dialog   
+    });
+
+});
