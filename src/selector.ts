@@ -2,6 +2,12 @@ interface ImportedFile {
     content: string;
     filePath: string;
 }
+interface ImportedTaskList {
+    uId: number;
+    title: string;
+    file: ImportedFile;
+    selected: boolean;
+}
 interface ImportedTask {
     uID: number;
     title: string;
@@ -28,7 +34,7 @@ class taskList {
         this.title = title;
         this.file = file;
 
-        console.log ('Task List Identified: ${this.title}, File Path: ${this.filePath}, Selected: ${this.selected}');
+        console.log(`Task List Identified: ${this.title}, File Path: ${this.file.filePath}, Selected: ${this.selected}`);
         
     }
    toJSON() {
@@ -41,16 +47,17 @@ class taskList {
     
     createListElement(): HTMLDivElement {
         const listDiv = document.createElement('div');
-        listDiv.id = 'task-${this.uID}';
+        listDiv.id = `task-${this.uID}`;
 
         const button = document.createElement("button");
 
         Object.assign(button, {
-            id: 'button-${this.title}',
+            id: `button-${this.title}`,
             className: "list-button",
+            textContent: this.title,
             onclick: () => {
                 this.renderList();
-                console.log('List Rendered: ${this.title}');
+                console.log(`List Rendered: ${this.title}`);
             }
         });
 
@@ -60,10 +67,13 @@ class taskList {
 
         return listDiv;
     }   
+
     renderList() {
         // Will be written to load in task list
         // Can probably just reuse existing function for this
         
+        clearTDL(allTasks);
+
         const file = this.file;
 
         if (!file) {
@@ -107,11 +117,123 @@ class taskList {
     }
 }    
 
-document.addEventLiustener("DOMContentLoaded", () => {
-    const addButton = document.getElementById("importQuickSelect") as HTMLButtonElement;
-    addButton.addEventListener("click", () => {
-        const importList = new taskList().   
-        // Add File Dialog   
+let allLists: taskList[] = [];
+
+function addToSelector (file: ImportedFile) {
+    if (!file) {
+        console.log("No file data selected");
+        return;
+    }
+
+    // As it is, this line makes the title of the task list the path of the file
+    // This is VERY ugly so I'll change it to something else when I work out the ifle ofmrat
+
+    const title = file.filePath.split('\\').pop()?.replace('.json', '') || 'Untitled List';
+
+    const createdList = new taskList(title, file);
+    createdList.createListElement();
+
+    console.log(allTasks);
+    allLists.push(createdList);
+    console.log(allLists);
+
+}
+
+function exportQuickSelector(masterList: taskList[]) {
+    // Save the files present within the quick selector to a file.
+
+    const jsonDATA = JSON.stringify(masterList.map(list => list.toJSON()), null, 2);
+    console.log(jsonDATA);
+
+    // Log to file
+    window.electronAPI.saveTaskFile(jsonDATA)
+        .then((savedPath: void) => {
+            console.log("File saved successfully.");
+        })
+        .catch((error: any) => {
+            console.error("Error saving file:", error);
+        });
+}
+
+async function importQuickSelector () {
+    // First, clear the quick selector and all lists
+    clearQuickSelector(allLists);
+
+    // Grab file, parse contents, render quick selector.
+    const file = await window.electronAPI.openTaskFile();
+    if (!file) {
+        console.log("No file data selected");
+        return;
+    }
+
+    file.forEach((files: ImportedFile) => {
+        const importedLists = JSON.parse(files.content) as ImportedTaskList[];
+
+        // Check JSON integrity
+        importedLists.forEach((listData) => {
+            if (!('uID' in listData)) {
+                console.log ("Task List is missing uID! Property");
+            }
+            else if (!('title' in listData)) {
+                console.log ("Task List is missing Title! Property");
+            }
+            else if (!('file' in listData)) {
+                console.log ("Task List is missing File! Property");
+            }
+            else if (!('selected' in listData)) {
+                console.log ("Task List is missing Selected Property!");
+            }
+        });
+
+        importedLists.forEach((listData) => {
+            const importedList = new taskList (
+                listData.title,
+                listData.file,
+            );
+            allLists.push(importedList);
+            importedList.createListElement();
+        });
     });
 
+}
+
+function clearQuickSelector(masterList: taskList[]) {
+    masterList.forEach((list) => {
+        const listElement = document.getElementById(`task-${list.uID}`);
+        if (listElement) {
+            listElement.remove();
+        }
+    });
+    masterList = [];
+}
+document.addEventListener('DOMContentLoaded', () => {
+    const addToSelectorButton = document.getElementById('importToDoList');
+    const exportSelectorButton = document.getElementById('exportQuickSelect');
+    const importSelectorButton = document.getElementById('importQuickSelect');
+    const clearSelectorButton = document.getElementById('clearQuickSelect');
+    // const updateSelectorbutton = document.getElementById('updateQuickSelect');
+
+    addToSelectorButton?.addEventListener("click", () => {
+        window.electronAPI.openTaskFile().then((files: ImportedFile[] | null) => {
+            if (files) {
+                files.forEach((file) => {
+                    addToSelector(file);
+                });
+            } else {
+                console.log("No file selected");
+            }
+        });
+    });
+
+    exportSelectorButton?.addEventListener("click", () => {
+        exportQuickSelector(allLists);
+    });
+
+    importSelectorButton?.addEventListener("click", () => {
+        importQuickSelector();
+    });
+
+    clearSelectorButton?.addEventListener("click", () => {
+        clearQuickSelector(allLists);
+    });
 });

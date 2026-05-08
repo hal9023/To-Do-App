@@ -15,6 +15,8 @@
 * Task Descriptions
 * Date selection system for adding task "complete by dates" with built in calendar day selector
 * Draggable tasks
+* Make it so that you cannot export an empty to-do list
+
 
 ## Current Bugs:
 

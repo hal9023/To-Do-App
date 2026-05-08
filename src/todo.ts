@@ -107,7 +107,7 @@ function exportTDL(masterList: task[]) {
         })
         .catch((error: any) => {
             console.error("Error saving file:", error);
-        })
+        });
 }
 
 async function importTDL() {
@@ -130,19 +130,19 @@ async function importTDL() {
                 console.log ("Task is missing uID!");
             }
             else if (!('title' in taskData)) {
-                console.log ("Task is missing Title!");
+                console.log ("Task is missing Title Property!");
             }
             else if (!('description' in taskData)) {
-                console.log ("Task is missing Description!");
+                console.log ("Task is missing Description Property!");
             }
             else if (!('done' in taskData)) {
-                console.log ("Task is missing Done!");
+                console.log ("Task is missing Done Property!");
             }
             else if (!('indents' in taskData)) {
-                console.log ("Task is missing Indents!");
+                console.log ("Task is missing Indents Property!");
             }
             else if (!('selected' in taskData)) {
-                console.log ("Task is missing Selected!");
+                console.log ("Task is missing Selected Property!");
             }
         });
         // Process JSON if integrity is good
