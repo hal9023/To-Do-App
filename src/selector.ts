@@ -26,16 +26,30 @@ interface ImportedTask {
 class taskList {
     uID: number;
     title: string;
-    file: ImportedFile;
+    description: string;
+    done: boolean;
+    indents: number;
     selected: boolean = false;
+    deleted: boolean = false;
+    file: ImportedFile;
     
     constructor(title: string, file: ImportedFile) {
+        /*
+            This constructor right now has everything that represents a feature that will be added in
+            later in development hard coded for the sake of intercompatibility with the
+            task data structure
+        */
+
         this.uID = Date.now();
         this.title = title;
+        this.description = "";
+        this.done = false;
+        this.indents = 0;
+        this.selected = false;
+        this.deleted = false;
         this.file = file;
 
         console.log(`Task List Identified: ${this.title}, File Path: ${this.file.filePath}, Selected: ${this.selected}`);
-        
     }
    toJSON() {
         return {
@@ -206,6 +220,113 @@ function clearQuickSelector(masterList: taskList[]) {
     });
     masterList = [];
 }
+
+function taskListToTask(list: taskList): task[] {
+    // Function takes in an object of type task list and converts it to an array of tasks that can be compared with other task data
+
+    /*
+        Task List structure:
+
+        uID: number;
+        title: string;
+        description: string;
+        done: boolean;
+        indents: number;
+        selected: boolean = false;
+        deleted: boolean = false;
+        file: ImportedFile;
+
+        Task Structure:
+
+        uID: number;
+        title: string;
+        description: string;
+        done: boolean;
+        indents: number;
+        selected: boolean;
+    */
+
+
+    return []; // Placeholder for proper return staetment
+}
+function updatequickSelector(quickSelector: taskList[], folderPath: string) {
+    // Function that reads every file (if it exists) in the quick selector
+    // Compares it with the version loaded in the quick selector file
+    // If there are differences, update the quick selector version to match the file version
+
+    // Only works for lists that are in the defined directory for the program
+
+    const fields = ['uID', 'title', 'description', 'done', 'indents', 'selected'];
+
+    quickSelector.forEach((List) => {
+        const filePath = List.file.filePath;
+
+        /*
+            this block of code matches the file paths
+            reads the data from the path and imports it
+            as an array of task objects; basically it reads the file and breaks it down
+            into a bunch of tasks=
+        */
+        if (filePath.startsWith(folderPath)) {
+            window.electronAPI.readFile(filePath)
+                .then((content: string) => {
+                    const fileData = JSON.parse(content) as ImportedTask[];
+                    // Check JSON integrity
+
+                    let complete: boolean = true;
+                    /*
+                     Going to reimplement this with a foreach 
+                     that iterates over the individual fields rather than
+                     using a ton of elif statements
+                    */
+                    fileData.forEach((taskData) => {
+                        if (!('uID' in taskData)) {
+                            console.log ("Task is missing uID!");
+                            complete = false;
+                        }
+                        else if (!('title' in taskData)) {
+                            console.log ("Task is missing Title Property!");
+                            complete = false;
+                        }
+                        else if (!('description' in taskData)) {
+                            console.log ("Task is missing Description Property!");
+                            complete = false;
+                        }
+                        else if (!('done' in taskData)) {
+                            console.log ("Task is missing Done Property!");
+                            complete = false;
+                        }
+                        else if (!('indents' in taskData)) {
+                            console.log ("Task is missing Indents Property!");
+                            complete = false;
+                        }
+                        else if (!('selected' in taskData)) {
+                            console.log ("Task is missing Selected Property!");
+                            complete = false;
+                        }        
+                    });
+                    if (complete) {
+                        let equal: boolean = true;
+                        fields.forEach((field) => {
+
+                        });
+                    }
+                    else {
+                        console.log(`File ${filePath} is incomplete! Quick Selector will not be updated with this file.`);
+                    }
+                })
+                .catch((error: any) => {
+                    console.error("Error reading file:", error);  
+                });
+
+        }
+        else {
+            console.log(`File ${filePath} is not in the specified directory and will be skipped.`);
+        }
+
+    });
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     const addToSelectorButton = document.getElementById('importToDoList');
     const exportSelectorButton = document.getElementById('exportQuickSelect');
