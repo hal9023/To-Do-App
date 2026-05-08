@@ -227,25 +227,28 @@ function taskListToTask(list: taskList): task[] {
     /*
         Task List structure:
 
-        uID: number;
-        title: string;
-        description: string;
-        done: boolean;
-        indents: number;
-        selected: boolean = false;
-        deleted: boolean = false;
-        file: ImportedFile;
+        uID: number
+        title: string
+        description: string
+        done: boolean
+        indents: number
+        selected: boolean = false
+        deleted: boolean = false
+        file: ImportedFile
 
         Task Structure:
 
-        uID: number;
-        title: string;
-        description: string;
-        done: boolean;
-        indents: number;
-        selected: boolean;
+        uID: number
+        title: string
+        description: string
+        done: boolean
+        indents: number
+        selected: boolean
+        deleted: boolean
+
     */
 
+    
 
     return []; // Placeholder for proper return staetment
 }
